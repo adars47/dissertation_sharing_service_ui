@@ -11,7 +11,5 @@ export default (props)=>{
           </Toast>
         </ToastContainer>
       </Row>
-    );
-  
-    
+    );    
 };

@@ -4,6 +4,7 @@ import RulesEditor from "../Components/RulesEditor";
 import { Button } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import ToastComponent from "../Components/ToastComponent";
+import FileUploadComponent from "../Components/FileUploadComponent";
 
 export default (props) => {
 
@@ -14,7 +15,8 @@ export default (props) => {
     const [selectedIndex,setSelectedIndex] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const [message,setMessage] = useState("");
-    
+    const [uploadId, setUploadId] = useState(27);
+
     const showAlert = (message)=>{
         setMessage(message);
         setShowToast(true);
@@ -33,11 +35,14 @@ export default (props) => {
             expires_at:expiresAt
         }
 
-        console.log(payload);
-        // const response = await fetch("",{
-        //     method: "POST",
-        //     body: JSON.stringify(payload)
-        // });
+       await fetch("http://127.0.0.1:8000/api/submitRules",{
+            method: "POST",
+            body: JSON.stringify(payload)
+        }).then(async function(response){
+            let message = await response.text();
+            setUploadId(message);
+        });
+
     }
 
     const edit = (event)=>{
@@ -55,30 +60,42 @@ export default (props) => {
     const setExpiryDate = (event)=>{
         setExpiresAt(event.target.value);
     }
-    return (
-        <div className="container">
-            {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm} rules={rules} index={selectedIndex} setRules={setRules}/>:""}
-            <h1>Pruposed Rules</h1>
-            <div>
-            <Form>
-                <Form.Group className="mb-3" controlId="expiredAt">
-                    <Form.Label>Expires At</Form.Label>
-                    <Form.Control type="datetime-local" onChange={setExpiryDate} />
-                </Form.Group>
-            </Form>
-                <div className="container-sm p-1">
-                    Create Rule <Button onClick={add}>+</Button>
+
+    if(uploadId===0)
+    {
+        return (
+            <div className="container">
+                {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm} rules={rules} index={selectedIndex} setRules={setRules}/>:""}
+                <h1>Pruposed Rules</h1>
+                <div>
+                <Form>
+                    <Form.Group className="mb-3" controlId="expiredAt">
+                        <Form.Label>Expires At</Form.Label>
+                        <Form.Control type="datetime-local" onChange={setExpiryDate} />
+                    </Form.Group>
+                </Form>
+                    <div className="container-sm p-1">
+                        Create Rule <Button onClick={add}>+</Button>
+                    </div>
+                    {rules.map((value,index)=>{
+                        return (
+                            <div className="border p-4">
+                            <RulesViewer value={value} index={index} edit={edit}/>
+                            </div>
+                        )
+                    })}
+                    <Button className="btn btn-primay m-1" onClick={submitRules}>Submit</Button>
                 </div>
-                {rules.map((value,index)=>{
-                    return (
-                        <div className="border p-4">
-                        <RulesViewer value={value} index={index} edit={edit}/>
-                        </div>
-                    )
-                })}
-                <Button className="btn btn-primay m-1" onClick={submitRules}>Submit</Button>
+                {showToast?<ToastComponent setShowToast={setShowToast} showToast={showToast} message={message}/>:""}
             </div>
-            {showToast?<ToastComponent setShowToast={setShowToast} showToast={showToast} message={message}/>:""}
-        </div>
-    )
+        )
+    }
+    else
+    {
+        return (
+            <div>
+                <FileUploadComponent uploadId={uploadId}/>
+            </div>
+        )
+    }
 }
