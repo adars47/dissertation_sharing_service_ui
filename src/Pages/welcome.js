@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react"
 import RulesViewer from "../Components/RulesViewer";
-import { Rule } from "@mui/icons-material";
 import RulesEditor from "../Components/RulesEditor";
+import { Button } from "react-bootstrap";
 
 export default (props) => {
 
@@ -9,23 +9,10 @@ export default (props) => {
     const [expiresAt,setExpiresAt] = useState(null);
     const [showForm,setShowForm] = useState(false);
     const [selectedRule,setSelectRule] = useState(null);
+    const [selectedIndex,setSelectedIndex] = useState(null);
 
     useEffect(()=>{
         setRules([
-            {
-                "authority":"http://medicalschool.dev",
-                "attributes":[
-                    "isDoctor",
-                    "isMedicalStaff"
-                ]
-            },
-            {
-                "authority":"http://ysj.dev",
-                "attributes":[
-                    "isStudent",
-                    "isMedicalStudent"
-                ]
-            }
         ]);
 
         setExpiresAt("2024-10-18");    
@@ -46,19 +33,25 @@ export default (props) => {
             method: "POST",
             body: JSON.stringify(payload)
         });
-
     }
 
     const edit = (event)=>{
         setSelectRule(rules.at(event.target.id));
         setShowForm(true);
-        console.log(event.target.id);
+        setSelectedIndex(event.target.id);
     };
+
+    const add = (event)=>{
+        setSelectRule(null);
+        setSelectedIndex(-1);
+        setShowForm(true);
+    }
 
     return (
         <div className="container">
-            {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm}/>:""}
+            {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm} rules={rules} index={selectedIndex} setRules={setRules}/>:""}
             <h1>Pruposed Rules</h1>
+            Create Rule <Button onClick={add}>+</Button>
             {rules.map((value,index)=>{
                 return (
                     <div className="border p-4">
