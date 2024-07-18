@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import React,{useState,useEffect} from "react"
 import CloseButton from 'react-bootstrap/CloseButton';
-import Alert from 'react-bootstrap/Alert';
 
 export default (props) => {
 
