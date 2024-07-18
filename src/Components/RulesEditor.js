@@ -3,12 +3,20 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import React,{useState,useEffect} from "react"
 import CloseButton from 'react-bootstrap/CloseButton';
+import ToastComponent from "../Components/ToastComponent";
 
 export default (props) => {
 
     const [attributes,setAttributes] = useState(props.selectedRule?props.selectedRule.attributes??[]:[]);
     const [input,setInput] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+    const [message,setMessage] = useState("");
     
+    const showAlert = (message)=>{
+        setMessage(message);
+        setShowToast(true);
+    }
+
     const formControl = (event) =>{
         event.preventDefault();
         const authority = event.target.authority.value
@@ -23,6 +31,19 @@ export default (props) => {
             authority:authority,
             attributes:attributes
         })
+
+        if(authority=="")
+        {
+            showAlert("Authority is required!");
+            return;
+        }
+
+        console.log(attributes);
+        if(attributes.length===0)
+        {
+            showAlert("Attributes is required!");
+            return;
+        }
         props.setRules(rules);
         setAttributes([]);
         props.setShowForm(false);
@@ -41,10 +62,16 @@ export default (props) => {
 
     const addAttribute = (value) =>{
         let added = false;
+        if(input===undefined)
+        {
+            showAlert("Authority is required!");
+            return;
+        }
+        
         const name = input.target.value;
         if(name.trim()==="")
         {
-
+            showAlert("Authority is required!");
             return;
         }
         let _attributes = attributes.filter((itel)=>{
@@ -63,7 +90,7 @@ export default (props) => {
     };
 
     return(
-        <div  className="modal show" tabIndex="-1"
+        <div className="modal show" tabIndex="-1"
         style={{ display: 'block', position: 'initial' }}>
             <Modal.Dialog>
             <Modal.Body>
@@ -76,7 +103,7 @@ export default (props) => {
                     <Form.Group className="mb-3">
                         {attributes.map((value,index)=>{
                             return(
-                                <div>
+                                <div key={index}>
                                     {value} <CloseButton id={index} onClick={removeAttribute}/>
                                 </div>
                             )
@@ -87,7 +114,7 @@ export default (props) => {
                         <Form.Label>Attributes</Form.Label>
                         <div style={{display:'flex'}}>
                         <Form.Control type="Attribute" onKeyUp={setInput} placeholder="Attributes" />
-                        <Button onClick={addAttribute}>+</Button>
+                        <Button className='btn btn-primary m-1' onClick={addAttribute}>+</Button>
                         </div>
                     </Form.Group>
                     
@@ -97,6 +124,7 @@ export default (props) => {
                 </Form>
                 </Modal.Body>
             </Modal.Dialog>
+            {showToast?<ToastComponent setShowToast={setShowToast} showToast={showToast} message={message}/>:""}
         </div>
     )
 };

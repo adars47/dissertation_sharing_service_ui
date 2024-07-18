@@ -2,6 +2,8 @@ import React,{useState,useEffect} from "react"
 import RulesViewer from "../Components/RulesViewer";
 import RulesEditor from "../Components/RulesEditor";
 import { Button } from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
+import ToastComponent from "../Components/ToastComponent";
 
 export default (props) => {
 
@@ -10,17 +12,19 @@ export default (props) => {
     const [showForm,setShowForm] = useState(false);
     const [selectedRule,setSelectRule] = useState(null);
     const [selectedIndex,setSelectedIndex] = useState(null);
-
-    useEffect(()=>{
-        setRules([
-        ]);
-
-        setExpiresAt("2024-10-18");    
-    },[]);
+    const [showToast, setShowToast] = useState(false);
+    const [message,setMessage] = useState("");
+    
+    const showAlert = (message)=>{
+        setMessage(message);
+        setShowToast(true);
+    }
 
     const submitRules = async() =>{
-        if((rules) ||  expiresAt === null)
+
+        if(rules.length===0 || expiresAt === null)
         {
+            showAlert("Rules and expires at is required");
             return ;
         }
 
@@ -29,10 +33,11 @@ export default (props) => {
             expires_at:expiresAt
         }
 
-        const response = await fetch("",{
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
+        console.log(payload);
+        // const response = await fetch("",{
+        //     method: "POST",
+        //     body: JSON.stringify(payload)
+        // });
     }
 
     const edit = (event)=>{
@@ -47,18 +52,33 @@ export default (props) => {
         setShowForm(true);
     }
 
+    const setExpiryDate = (event)=>{
+        setExpiresAt(event.target.value);
+    }
     return (
         <div className="container">
             {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm} rules={rules} index={selectedIndex} setRules={setRules}/>:""}
             <h1>Pruposed Rules</h1>
-            Create Rule <Button onClick={add}>+</Button>
-            {rules.map((value,index)=>{
-                return (
-                    <div className="border p-4">
-                    <RulesViewer value={value} index={index} edit={edit}/>
-                    </div>
-                )
-            })}
+            <div>
+            <Form>
+                <Form.Group className="mb-3" controlId="expiredAt">
+                    <Form.Label>Expires At</Form.Label>
+                    <Form.Control type="datetime-local" onChange={setExpiryDate} />
+                </Form.Group>
+            </Form>
+                <div className="container-sm p-1">
+                    Create Rule <Button onClick={add}>+</Button>
+                </div>
+                {rules.map((value,index)=>{
+                    return (
+                        <div className="border p-4">
+                        <RulesViewer value={value} index={index} edit={edit}/>
+                        </div>
+                    )
+                })}
+                <Button className="btn btn-primay m-1" onClick={submitRules}>Submit</Button>
+            </div>
+            {showToast?<ToastComponent setShowToast={setShowToast} showToast={showToast} message={message}/>:""}
         </div>
     )
 }
