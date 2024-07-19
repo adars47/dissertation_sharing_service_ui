@@ -15,7 +15,7 @@ export default (props) => {
     const [selectedIndex,setSelectedIndex] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const [message,setMessage] = useState("");
-    const [uploadId, setUploadId] = useState(27);
+    const [uploadId, setUploadId] = useState(17);
 
     const showAlert = (message)=>{
         setMessage(message);
@@ -66,7 +66,7 @@ export default (props) => {
         return (
             <div className="container">
                 {showForm?<RulesEditor selectedRule={selectedRule} setShowForm={setShowForm} rules={rules} index={selectedIndex} setRules={setRules}/>:""}
-                <h1>Pruposed Rules</h1>
+                <h3>Create rules to verify access</h3>
                 <div>
                 <Form>
                     <Form.Group className="mb-3" controlId="expiredAt">
@@ -94,7 +94,7 @@ export default (props) => {
     {
         return (
             <div>
-                <FileUploadComponent uploadId={uploadId}/>
+                <FileUploadComponent uploadId={uploadId} setUploadId={setUploadId}/>
             </div>
         )
     }
