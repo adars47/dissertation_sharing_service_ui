@@ -38,7 +38,6 @@ export default (props) => {
             return;
         }
 
-        console.log(attributes);
         if(attributes.length===0)
         {
             showAlert("Attributes is required!");

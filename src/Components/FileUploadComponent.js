@@ -7,8 +7,6 @@ import { useState } from "react";
 import axios from "axios";
 import ToastComponent from "../Components/ToastComponent";
 
-
-
 registerPlugin(FilePondPluginFileEncode);
 
 export default (props)=>{
@@ -24,7 +22,6 @@ export default (props)=>{
 
     const startUpload = ()=>{
         const formData = new FormData();
-        console.log(personalFiles.length)
         if(personalFiles.length === 0)
         {
             showAlert("No files selected");

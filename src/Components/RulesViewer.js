@@ -1,7 +1,7 @@
 import { ListGroup,Form, Button } from "react-bootstrap"
 export default (props)=>{
     return (
-        <div>
+        <div className="m-2">
             <Form.Label>
             Authority:
             </Form.Label>
@@ -20,7 +20,9 @@ export default (props)=>{
                 )
             })}
             </ListGroup>
+            {props.hideEdit==undefined?
             <Button onClick={props.edit} id={props.index}> Edit</Button>
+            :""}
         </div>
     )
 }
