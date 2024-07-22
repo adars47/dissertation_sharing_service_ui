@@ -36,7 +36,7 @@ export default (props)=>{
                 val.name
             );
         }
-        axios.post("http://127.0.0.1:8000/api/uploadFiles/"+uploadId,formData)
+        axios.post("http://sharingserviceb.dynv6.net/api/uploadFiles/"+uploadId,formData)
         .then(async (response)=>{
             if(response.status===200){
                 showAlert("Successfully uploaded");
@@ -58,7 +58,7 @@ export default (props)=>{
         {shareUrl?
         <h3>
             <p className="text-center">Share this url to the medical practitioner</p>
-            <p className="text-center">{"http://localhost:3000/view/"+uploadId}</p>            
+            <p className="text-center">{window.location.origin+"/view/"+uploadId}</p>            
         </h3>
         :
         ""

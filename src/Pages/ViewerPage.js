@@ -1,16 +1,15 @@
 import axios from "axios";
 import React,{useState,useEffect} from "react";
 import RulesViewer from "../Components/RulesViewer";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import RulesValidator from "../Components/RulesValidator";
-import { OneKkRounded } from "@mui/icons-material";
 
 export default (props) =>{
     const uploadId = props.uploadId;
     const [rules,setRules] = useState([])
     let kkeys =[];
     useEffect(()=>{
-        axios.get("http://127.0.0.1:8000/api/getRules/"+uploadId)
+        axios.get("http://sharingserviceb.dynv6.net/api/getRules/"+uploadId)
         .then(async(response)=>{
             setRules(response.data);
         }).catch((response)=>{
@@ -34,11 +33,11 @@ export default (props) =>{
             })
 
             
-            axios.post("http://127.0.0.1:8000/api/satisfy/"+uploadId,payload)
+            axios.post("http://sharingserviceb.dynv6.net/api/satisfy/"+uploadId,payload)
             .then((response)=>{
                 if(response.status===200)
                 {
-                    const url = "http://127.0.0.1:8000/download?filename="+response.data;
+                    const url = "http://sharingserviceb.dynv6.net/download?filename="+response.data;
                     console.log(url);
                     const link = document.createElement('a');
                     link.href = url;

@@ -15,7 +15,7 @@ export default (props) => {
     const [selectedIndex,setSelectedIndex] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const [message,setMessage] = useState("");
-    const [uploadId, setUploadId] = useState(17);
+    const [uploadId, setUploadId] = useState(0);
 
     const showAlert = (message)=>{
         setMessage(message);
@@ -35,7 +35,7 @@ export default (props) => {
             expires_at:expiresAt
         }
 
-       await fetch("http://127.0.0.1:8000/api/submitRules",{
+       await fetch("http://sharingserviceb.dynv6.net/api/submitRules",{
             method: "POST",
             body: JSON.stringify(payload)
         }).then(async function(response){
